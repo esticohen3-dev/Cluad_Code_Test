@@ -17,7 +17,7 @@ const TRIP = {
       endDate: "29433838", status: "1329867708", link: "1822494486", notes: "82491916",
     },
   },
-  sheetCsvUrl: null,
+  sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQlvh7B2_y-9lsfQpV_b02yid9d4_olGN2uKKEIFxcSIy40POi6wr2R8R0lrEB6bWlgqVvGoDmf2jlL/pub?gid=1814928328&single=true&output=csv",
 
   title: "הטיול שלנו לתאילנד",
   subtitle: "ים, חול, פאד תאי וזיכרונות 🌴",
