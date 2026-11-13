@@ -261,7 +261,44 @@ function rebuild() {
   const pending = loadPending();
   savePending(pending);
   mergeSheetEntries([...sheetEntries, ...pending.map((p) => p.entry)]);
+  addHotelsToTimeline();
   renderAll();
+}
+
+// Puts every hotel's check-in and check-out on the daily timeline, creating a day card if needed.
+// A day with a check-out in one place and a check-in in another is marked as a travel day.
+function addHotelsToTimeline() {
+  const dayFor = (date, place, title) => {
+    let day = TRIP.days.find((d) => d.date === date);
+    if (!day) {
+      day = { date, place, type: "stay", title, items: [] };
+      TRIP.days.push(day);
+    }
+    day.items = day.items || [];
+    return day;
+  };
+  for (const h of TRIP.hotels) {
+    if (!h.name) continue;
+    const tag = h.status === "booked" ? "" : " (בבדיקה)";
+    if (h.checkIn) {
+      const day = dayFor(h.checkIn, h.stop, `צ'ק-אין ב${h.stop}`);
+      day.items.push(`🏨 צ'ק-אין: ${h.name}${tag}`);
+      day.checkInPlace = h.stop;
+    }
+    if (h.checkOut) {
+      const day = dayFor(h.checkOut, h.stop, `צ'ק-אאוט מ${h.stop}`);
+      day.items.push(`🧳 צ'ק-אאוט: ${h.name}${tag}`);
+      day.checkOutPlace = h.stop;
+    }
+  }
+  for (const d of TRIP.days) {
+    if (d.type === "stay" && d.checkInPlace && d.checkOutPlace && d.checkInPlace !== d.checkOutPlace) {
+      d.type = "move";
+      d.place = `${d.checkOutPlace} ← ${d.checkInPlace}`;
+      d.title = `עוברים מ${d.checkOutPlace} ל${d.checkInPlace}`;
+    }
+  }
+  TRIP.days.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
 }
 
 function renderAddButtons() {
