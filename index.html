@@ -7,13 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <header class="hero">
     <div class="sun"></div>
     <div class="hero-content">
-      <p class="eyebrow">🇹🇭 תאילנד</p>
+      <p class="eyebrow"><svg class="icon" aria-hidden="true"><use href="#i-map-pin"/></svg> תאילנד · אוגוסט 2027</p>
       <h1 id="title"></h1>
       <p id="subtitle" class="subtitle"></p>
       <div id="countdown" class="countdown"></div>
@@ -24,60 +24,60 @@
   </header>
 
   <nav class="tabs">
-    <a href="#travelers">👨‍👩‍👧‍👦 מטיילים</a>
-    <a href="#flights">✈️ טיסות</a>
-    <a href="#route">🧭 מסלול</a>
-    <a href="#days">🗓️ יום-יום</a>
-    <a href="#hotels">🏨 מלונות</a>
-    <a href="#attractions">📍 אטרקציות</a>
+    <a href="#travelers"><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> מטיילים</a>
+    <a href="#flights"><svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg> טיסות</a>
+    <a href="#route"><svg class="icon" aria-hidden="true"><use href="#i-route"/></svg> מסלול</a>
+    <a href="#days"><svg class="icon" aria-hidden="true"><use href="#i-calendar-days"/></svg> יום-יום</a>
+    <a href="#hotels"><svg class="icon" aria-hidden="true"><use href="#i-bed-double"/></svg> מלונות</a>
+    <a href="#attractions"><svg class="icon" aria-hidden="true"><use href="#i-map-pin"/></svg> אטרקציות</a>
   </nav>
 
   <main>
     <section id="travelers">
-      <h2>👨‍👩‍👧‍👦 המטיילים</h2>
+      <h2><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> המטיילים</h2>
       <div id="travelers-list" class="travelers"></div>
     </section>
 
     <section id="flights">
-      <h2>✈️ טיסות</h2>
+      <h2><svg class="icon" aria-hidden="true"><use href="#i-plane"/></svg> טיסות</h2>
       <div id="flights-list" class="grid"></div>
     </section>
 
     <section id="route">
-      <h2>🧭 המסלול</h2>
+      <h2><svg class="icon" aria-hidden="true"><use href="#i-route"/></svg> המסלול</h2>
       <div id="route-list" class="route"></div>
     </section>
 
     <section id="days">
-      <h2>🗓️ יום אחרי יום</h2>
+      <h2><svg class="icon" aria-hidden="true"><use href="#i-calendar-days"/></svg> יום אחרי יום</h2>
       <div id="days-list" class="days"></div>
     </section>
 
     <section id="hotels">
-      <h2>🏨 מלונות</h2>
+      <h2><svg class="icon" aria-hidden="true"><use href="#i-bed-double"/></svg> מלונות</h2>
       <div id="hotels-list" class="grid"></div>
     </section>
 
     <section id="attractions">
-      <h2>📍 אטרקציות ורעיונות</h2>
+      <h2><svg class="icon" aria-hidden="true"><use href="#i-map-pin"/></svg> אטרקציות ורעיונות</h2>
       <div id="attractions-list"></div>
     </section>
   </main>
 
-  <footer>נבנה באהבה לקראת הטיול 🥥</footer>
+  <footer>נבנה באהבה לקראת הטיול</footer>
 
   <dialog id="add-dialog" class="add-dialog">
     <form id="add-form" method="dialog" novalidate>
       <div class="dialog-head">
-        <h2>➕ הוספה לטיול</h2>
-        <button type="button" class="close-btn" id="add-close" aria-label="סגירה">✕</button>
+        <h2>הוספה לטיול</h2>
+        <button type="button" class="close-btn" id="add-close" aria-label="סגירה"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
       </div>
 
       <fieldset class="type-picker">
         <legend>מה מוסיפים?</legend>
-        <label><input type="radio" name="type" value="אטרקציה / רעיון" checked><span>📍 אטרקציה / רעיון</span></label>
-        <label><input type="radio" name="type" value="מלון"><span>🏨 מלון</span></label>
-        <label><input type="radio" name="type" value="תוכנית ליום"><span>🗓️ תוכנית ליום</span></label>
+        <label><input type="radio" name="type" value="אטרקציה / רעיון" checked><span><svg class="icon" aria-hidden="true"><use href="#i-map-pin"/></svg> אטרקציה / רעיון</span></label>
+        <label><input type="radio" name="type" value="מלון"><span><svg class="icon" aria-hidden="true"><use href="#i-bed-double"/></svg> מלון</span></label>
+        <label><input type="radio" name="type" value="תוכנית ליום"><span><svg class="icon" aria-hidden="true"><use href="#i-calendar-days"/></svg> תוכנית ליום</span></label>
       </fieldset>
 
       <label class="field"><span>עיר / מקום</span>
@@ -100,8 +100,8 @@
 
       <fieldset class="field status-picker" data-show="hotel">
         <legend>סטטוס</legend>
-        <label><input type="radio" name="status" value="בבדיקה" checked><span>🔍 בבדיקה</span></label>
-        <label><input type="radio" name="status" value="הוזמן"><span>✅ הוזמן</span></label>
+        <label><input type="radio" name="status" value="בבדיקה" checked><span><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg> בבדיקה</span></label>
+        <label><input type="radio" name="status" value="הוזמן"><span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> הוזמן</span></label>
       </fieldset>
 
       <label class="field"><span>קישור (לא חובה)</span>
@@ -119,7 +119,8 @@
 
   <div class="toast" id="toast" hidden></div>
 
-  <script src="data.js?v=13"></script>
-  <script src="app.js?v=13"></script>
+  <script src="icons.js?v=15"></script>
+  <script src="data.js?v=15"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>

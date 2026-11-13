@@ -161,7 +161,8 @@ h3 { margin: 0 0 6px; font-size: 1.1rem; }
 .airport .code { font-size: 1.6rem; font-weight: 800; color: var(--turquoise); }
 .plane-line { flex: 1; border-top: 2px dashed var(--turquoise-light); position: relative; }
 .plane-line span {
-  position: absolute; top: -14px; left: 50%;
+  position: absolute; top: -11px; left: 50%;
+  display: grid; color: var(--turquoise);
   transform: translateX(-50%) scaleX(-1);
   background: var(--card); padding: 0 6px;
 }
@@ -172,7 +173,9 @@ h3 { margin: 0 0 6px; font-size: 1.1rem; }
 /* ---------- Route ---------- */
 .route { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; }
 .stop { flex: 1 1 150px; text-align: center; }
-.stop .emoji { font-size: 2rem; }
+.stop-icon { color: var(--turquoise); }
+.stop-icon .icon { width: 28px; height: 28px; }
+.stop.tbd .stop-icon { color: var(--muted); }
 .stop.tbd { background: transparent; border: 2px dashed var(--sand); box-shadow: none; }
 .arrow { align-self: center; font-size: 1.4rem; color: var(--turquoise-light); }
 
@@ -187,7 +190,7 @@ h3 { margin: 0 0 6px; font-size: 1.1rem; }
 .city-group { margin-bottom: 22px; }
 .city-group h3 { color: var(--ink); margin-bottom: 10px; }
 .attraction { display: flex; gap: 12px; align-items: flex-start; }
-.attraction .emoji { font-size: 1.8rem; line-height: 1; }
+.att-icon { flex: 0 0 auto; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--field); color: var(--turquoise); }
 
 footer { padding: 24px 16px 32px; text-align: center; color: var(--muted); }
 
@@ -358,3 +361,35 @@ footer { padding: 24px 16px 32px; text-align: center; color: var(--muted); }
   text-align: right;
 }
 .field input[type="date"]::-webkit-date-and-time-value { text-align: right; }
+
+/* ---------- Line icons (Lucide) ---------- */
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  flex: 0 0 auto;
+  vertical-align: -0.17em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+h2 .icon { width: 1em; height: 1em; stroke-width: 2; }
+.tabs .icon, .badge .icon { width: 1em; height: 1em; }
+.arrow .icon { width: 22px; height: 22px; }
+.empty .icon { color: var(--turquoise); }
+.flight-note { background: #e9eff3; }
+.flight-note.warn { background: var(--cream); }
+.flight-note .icon { color: var(--turquoise); }
+.flight-note.warn .icon { color: var(--wine); }
+.day h3 .icon { color: var(--turquoise); }
+.day.move h3 .icon { color: var(--wine); }
+.close-btn { display: grid; place-items: center; }
+.eyebrow .icon { color: var(--turquoise); }
+
+/* ---------- Traveler initials ---------- */
+.avatar { font-size: 1.9rem; font-weight: 700; }
+.avatar.av-0 { background: var(--wine); color: var(--cream); }
+.avatar.av-1 { background: var(--turquoise); color: #fff; }
+.avatar.av-2 { background: var(--sand); color: var(--wine); }
+.avatar.av-3 { background: var(--mist); color: var(--ink); }

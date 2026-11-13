@@ -20,17 +20,17 @@ const TRIP = {
   sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQlvh7B2_y-9lsfQpV_b02yid9d4_olGN2uKKEIFxcSIy40POi6wr2R8R0lrEB6bWlgqVvGoDmf2jlL/pub?gid=1814928328&single=true&output=csv",
 
   title: "הטיול שלנו לתאילנד",
-  subtitle: "ים, חול, פאד תאי וזיכרונות 🌴",
+  subtitle: "ים, חול, פאד תאי וזיכרונות",
 
   // תאריכים בפורמט "YYYY-MM-DD", לדוגמה "2027-02-10"
   startDate: "2027-08-07",
   endDate: "2027-08-26",
 
   travelers: [
-    { name: "אסתי", emoji: "🌺" },
-    { name: "טלאור", emoji: "🌴" },
-    { name: "אן", emoji: "🐚" },
-    { name: "ניב", emoji: "🏄" },
+    { name: "אסתי" },
+    { name: "טלאור" },
+    { name: "אן" },
+    { name: "ניב" },
   ],
 
   // טיסות – כל כיוון מורכב מכמה קטעים (legs). זמנים מקומיים.
@@ -49,7 +49,8 @@ const TRIP = {
     {
       label: "טיסת חזור",
       summary: "בנגקוק → דובאי → תל אביב",
-      note: "⚠️ ההמראה מבנגקוק ב-03:40 לפנות בוקר – יוצאים לשדה בערב של 25.8. עצירה בדובאי של 5:15 שעות",
+      warning: true,
+      note: "ההמראה מבנגקוק ב-03:40 לפנות בוקר – יוצאים לשדה בערב של 25.8. עצירה בדובאי של 5:15 שעות",
       legs: [
         { date: "2027-08-26", from: "בנגקוק", fromCode: "BKK", to: "דובאי", toCode: "DXB",
           departTime: "03:40", arriveTime: "06:50", airline: "Emirates", flightNumber: "EK 371", duration: "6:10" },
@@ -61,9 +62,9 @@ const TRIP = {
 
   // התחנות לפי הסדר. confirmed: true = סגור, false = עוד לא סגור
   stops: [
-    { name: "פוקט", emoji: "🏝️", nights: null, confirmed: true, note: "נוחתים כאן ב-8.8" },
-    { name: "עוד לא נקבע", emoji: "❓", nights: null, confirmed: false, note: "האמצע של הטיול – עוד פתוח" },
-    { name: "בנגקוק", emoji: "🏙️", nights: null, confirmed: true, note: "טסים הביתה בלילה של 25.8" },
+    { name: "פוקט", nights: null, confirmed: true, note: "נוחתים כאן ב-8.8" },
+    { name: "עוד לא נקבע", nights: null, confirmed: false, note: "האמצע של הטיול – עוד פתוח" },
+    { name: "בנגקוק", nights: null, confirmed: true, note: "טסים הביתה בלילה של 25.8" },
   ],
 
   // מלונות – לכל תחנה. status: "not-booked" | "considering" | "booked"
@@ -76,12 +77,12 @@ const TRIP = {
   // דוגמה: { date: "2027-02-10", place: "פוקט", type: "flight", title: "נחיתה בפוקט", items: ["צ'ק-אין במלון", "שקיעה בחוף"] }
   days: [
     { date: "2027-08-07", place: "בדרך", type: "flight", title: "יוצאים לדרך!", items: ["15:50 המראה מתל אביב לדובאי", "22:40 טיסה מדובאי לפוקט"] },
-    { date: "2027-08-08", place: "פוקט", type: "flight", title: "נחיתה בפוקט 🏝️", items: ["08:10 נחיתה בפוקט", "צ'ק-אין במלון ומנוחה"] },
+    { date: "2027-08-08", place: "פוקט", type: "flight", title: "נחיתה בפוקט", items: ["08:10 נחיתה בפוקט", "צ'ק-אין במלון ומנוחה"] },
     { date: "2027-08-25", place: "בנגקוק", type: "move", title: "יום אחרון בבנגקוק", items: ["יוצאים לשדה התעופה בערב / בלילה"] },
-    { date: "2027-08-26", place: "בדרך הביתה", type: "flight", title: "טסים הביתה", items: ["03:40 המראה מבנגקוק לדובאי", "12:05 טיסה מדובאי לתל אביב", "14:35 נחיתה בתל אביב 🏠"] },
+    { date: "2027-08-26", place: "בדרך הביתה", type: "flight", title: "טסים הביתה", items: ["03:40 המראה מבנגקוק לדובאי", "12:05 טיסה מדובאי לתל אביב", "14:35 נחיתה בתל אביב"] },
   ],
 
   // אטרקציות ורעיונות לפי עיר. planned: true = בתוכנית, false = רק רעיון
-  // דוגמה: { city: "פוקט", name: "חוף קאטה", emoji: "🏖️", planned: false, note: "חוף רגוע" }
+  // דוגמה: { city: "פוקט", name: "חוף קאטה", planned: false, note: "חוף רגוע" }
   attractions: [],
 };

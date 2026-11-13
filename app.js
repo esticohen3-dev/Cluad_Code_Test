@@ -19,22 +19,22 @@ function renderHero() {
   $("subtitle").textContent = TRIP.subtitle;
   const el = $("countdown");
   if (!TRIP.startDate) {
-    el.innerHTML = "📅 התאריכים ייקבעו בקרוב";
+    el.innerHTML = `${icon("calendar-days")} התאריכים ייקבעו בקרוב`;
     return;
   }
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const start = new Date(TRIP.startDate + "T00:00:00");
   const end = TRIP.endDate ? new Date(TRIP.endDate + "T00:00:00") : start;
   const days = Math.round((start - today) / 86400000);
-  if (days > 0) el.innerHTML = `עוד <strong>${days}</strong> ימים לטיול! 🏝️`;
-  else if (today <= end) el.innerHTML = "🎉 אנחנו בטיול!";
-  else el.innerHTML = "🥥 היה מדהים!";
+  if (days > 0) el.innerHTML = `עוד <strong>${days}</strong> ימים לטיול`;
+  else if (today <= end) el.innerHTML = "אנחנו בטיול!";
+  else el.innerHTML = "היה מדהים!";
 }
 
 function renderTravelers() {
-  $("travelers-list").innerHTML = TRIP.travelers.map((t) => `
+  $("travelers-list").innerHTML = TRIP.travelers.map((t, i) => `
     <div class="card traveler">
-      <div class="avatar">${t.emoji || "🙂"}</div>
+      <div class="avatar av-${i % 4}">${escapeHtml([...t.name.trim()][0] || "?")}</div>
       <div class="name">${escapeHtml(t.name)}</div>
     </div>`).join("");
 }
@@ -45,7 +45,7 @@ function renderLeg(l) {
       <div class="leg-date muted">${l.date ? escapeHtml(formatDate(l.date)) : TBD}</div>
       <div class="flight-route">
         <div class="airport"><div class="code">${escapeHtml(l.fromCode)}</div><div class="muted">${escapeHtml(l.from)}</div><div class="time" dir="ltr">${val(l.departTime)}</div></div>
-        <div class="plane-line"><span>✈️</span>${l.duration ? `<small>${escapeHtml(l.duration)} שע׳</small>` : ""}</div>
+        <div class="plane-line"><span>${icon("plane")}</span>${l.duration ? `<small>${escapeHtml(l.duration)} שע׳</small>` : ""}</div>
         <div class="airport"><div class="code">${escapeHtml(l.toCode)}</div><div class="muted">${escapeHtml(l.to)}</div><div class="time" dir="ltr">${val(l.arriveTime)}</div></div>
       </div>
       <div class="leg-meta muted">${val(l.airline)} · <span dir="ltr">${val(l.flightNumber)}</span></div>
@@ -55,18 +55,18 @@ function renderLeg(l) {
 function renderFlights() {
   $("flights-list").innerHTML = TRIP.flights.map((f) => `
     <div class="card">
-      <h3>${escapeHtml(f.label)} <span class="badge ok">הוזמן ✓</span></h3>
+      <h3>${escapeHtml(f.label)} <span class="badge ok">${icon("check")} הוזמן</span></h3>
       <div class="muted">${escapeHtml(f.summary || "")}</div>
-      ${f.legs.map(renderLeg).join('<div class="layover">🕐 עצירה בדובאי</div>')}
-      ${f.note ? `<p class="flight-note">${escapeHtml(f.note)}</p>` : ""}
+      ${f.legs.map(renderLeg).join(`<div class="layover">${icon("clock")} עצירה בדובאי</div>`)}
+      ${f.note ? `<p class="flight-note ${f.warning ? "warn" : ""}">${icon(f.warning ? "triangle-alert" : "info")} ${escapeHtml(f.note)}</p>` : ""}
     </div>`).join("");
 }
 
 function renderRoute() {
   $("route-list").innerHTML = TRIP.stops.map((s, i) => `
-    ${i > 0 ? '<div class="arrow">⬅</div>' : ""}
+    ${i > 0 ? `<div class="arrow">${icon("arrow-left")}</div>` : ""}
     <div class="card stop ${s.confirmed ? "" : "tbd"}">
-      <div class="emoji">${s.emoji}</div>
+      <div class="stop-icon">${icon(s.confirmed ? "map-pin" : "circle-help")}</div>
       <h3>${escapeHtml(s.name)}</h3>
       <div class="muted">${s.nights ? `${s.nights} לילות` : escapeHtml(s.note || "")}</div>
     </div>`).join("");
@@ -83,14 +83,14 @@ function dayNumber(d, i) {
 
 function renderDays() {
   if (!TRIP.days.length) {
-    $("days-list").innerHTML = `<div class="empty">🗓️ התוכנית היומית תופיע כאן ברגע שהתאריכים והמסלול ייסגרו</div>`;
+    $("days-list").innerHTML = `<div class="empty">${icon("calendar-days")} התוכנית היומית תופיע כאן ברגע שהתאריכים והמסלול ייסגרו</div>`;
     return;
   }
-  const icon = { move: "🚐", flight: "✈️", stay: "☀️" };
+  const dayIcon = { move: "bus", flight: "plane", stay: "sun" };
   $("days-list").innerHTML = TRIP.days.map((d, i) => `
     <div class="card day ${d.type || "stay"}">
       <div class="muted">${dayNumber(d, i)}${d.date ? " · " + escapeHtml(formatDate(d.date)) : ""} · ${escapeHtml(d.place || "")}</div>
-      <h3>${icon[d.type] || "☀️"} ${escapeHtml(d.title || "")}</h3>
+      <h3>${icon(dayIcon[d.type] || "sun")} ${escapeHtml(d.title || "")}</h3>
       ${d.items && d.items.length ? `<ul>${d.items.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
     </div>`).join("");
 }
@@ -99,11 +99,11 @@ function renderHotels() {
   const badge = {
     "not-booked": '<span class="badge tbd">עוד לא הוזמן</span>',
     considering: '<span class="badge maybe">בבדיקה</span>',
-    booked: '<span class="badge ok">הוזמן ✓</span>',
+    booked: `<span class="badge ok">${icon("check")} הוזמן</span>`,
   };
   $("hotels-list").innerHTML = TRIP.hotels.map((h) => `
     <div class="card">
-      <h3>🏨 ${escapeHtml(h.stop)}</h3>
+      <h3>${icon("bed-double")} ${escapeHtml(h.stop)}</h3>
       ${badge[h.status] || ""}
       <p>${h.name ? (h.link ? `<a href="${escapeHtml(h.link)}" target="_blank" rel="noopener">${escapeHtml(h.name)}</a>` : escapeHtml(h.name)) : '<span class="muted">עוד בוחרים מלון</span>'}</p>
       ${h.checkIn ? `<div class="muted">${escapeHtml(formatDate(h.checkIn))} – ${escapeHtml(formatDate(h.checkOut) || "?")}</div>` : ""}
@@ -113,7 +113,7 @@ function renderHotels() {
 
 function renderAttractions() {
   if (!TRIP.attractions.length) {
-    $("attractions-list").innerHTML = `<div class="empty">📍 עוד אין אטרקציות – לחצו על "➕ הוספה" כדי להוסיף</div>`;
+    $("attractions-list").innerHTML = `<div class="empty">${icon("map-pin")} עוד אין אטרקציות – לחצו על "הוספה" כדי להוסיף</div>`;
     return;
   }
   const cities = [...new Set(TRIP.attractions.map((a) => a.city))];
@@ -123,7 +123,7 @@ function renderAttractions() {
       <div class="grid">
         ${TRIP.attractions.filter((a) => a.city === city).map((a) => `
           <div class="card attraction">
-            <div class="emoji">${a.emoji || "📍"}</div>
+            <div class="att-icon">${icon("map-pin")}</div>
             <div>
               <strong>${a.link ? `<a href="${escapeHtml(a.link)}" target="_blank" rel="noopener">${escapeHtml(a.name)}</a>` : escapeHtml(a.name)}</strong>
               ${a.planned ? '<span class="badge ok">בתוכנית</span>' : '<span class="badge maybe">רעיון</span>'}
@@ -205,7 +205,7 @@ function mergeSheetEntries(entries) {
   for (const e of entries) {
     if (e.type.includes("אטרקציה")) {
       if (!e.name) continue;
-      TRIP.attractions.push({ city: e.city || "כללי", name: e.name, emoji: "📍", planned: false, note: e.notes, link: e.link, fromForm: true });
+      TRIP.attractions.push({ city: e.city || "כללי", name: e.name, planned: false, note: e.notes, link: e.link, fromForm: true });
     } else if (e.type.includes("מלון")) {
       if (!e.name) continue;
       const hotel = {
@@ -286,12 +286,12 @@ function addHotelsToTimeline() {
     const tag = h.status === "booked" ? "" : " (בבדיקה)";
     if (h.checkIn) {
       const day = dayFor(h.checkIn, h.stop, `צ'ק-אין ב${h.stop}`);
-      day.items.push(`🏨 צ'ק-אין: ${h.name}${tag}`);
+      day.items.push(`צ'ק-אין: ${h.name}${tag}`);
       day.checkInPlace = h.stop;
     }
     if (h.checkOut) {
       const day = dayFor(h.checkOut, h.stop, `צ'ק-אאוט מ${h.stop}`);
-      day.items.push(`🧳 צ'ק-אאוט: ${h.name}${tag}`);
+      day.items.push(`צ'ק-אאוט: ${h.name}${tag}`);
       day.checkOutPlace = h.stop;
     }
   }
@@ -309,11 +309,11 @@ function renderAddButtons() {
   if (!formReady()) return;
   // First in the bar, so it is visible on phones without scrolling the tabs.
   document.querySelector(".tabs").insertAdjacentHTML("afterbegin",
-    `<button type="button" class="add-tab" data-add="אטרקציה / רעיון">➕ הוספה</button>`);
+    `<button type="button" class="add-tab" data-add="אטרקציה / רעיון">${icon("plus")} הוספה</button>`);
   const typeFor = { days: "תוכנית ליום", hotels: "מלון", attractions: "אטרקציה / רעיון" };
   for (const [id, type] of Object.entries(typeFor)) {
     document.querySelector(`#${id} h2`).insertAdjacentHTML("beforeend",
-      ` <button type="button" class="add-btn" data-add="${type}">➕ הוספה</button>`);
+      ` <button type="button" class="add-btn" data-add="${type}">${icon("plus")} הוספה</button>`);
   }
   document.addEventListener("click", (ev) => {
     const btn = ev.target.closest("[data-add]");
@@ -466,7 +466,7 @@ function setupAddDialog() {
       savePending(pending);
       rebuild();
       $("add-dialog").close();
-      showToast("✅ נשמר! יופיע לכל המשפחה תוך כמה דקות");
+      showToast("נשמר! יופיע לכל המשפחה תוך כמה דקות");
     } catch {
       $("add-error").textContent = "לא הצלחנו לשמור – בדקו את החיבור לאינטרנט ונסו שוב";
       $("add-error").hidden = false;
