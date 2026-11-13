@@ -307,7 +307,8 @@ function addHotelsToTimeline() {
 
 function renderAddButtons() {
   if (!formReady()) return;
-  document.querySelector(".tabs").insertAdjacentHTML("beforeend",
+  // First in the bar, so it is visible on phones without scrolling the tabs.
+  document.querySelector(".tabs").insertAdjacentHTML("afterbegin",
     `<button type="button" class="add-tab" data-add="אטרקציה / רעיון">➕ הוספה</button>`);
   const typeFor = { days: "תוכנית ליום", hotels: "מלון", attractions: "אטרקציה / רעיון" };
   for (const [id, type] of Object.entries(typeFor)) {
