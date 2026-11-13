@@ -13,8 +13,8 @@ const TRIP = {
   googleForm: {
     formId: "1FAIpQLSeTpq5awQaN_R6cRMSktoKwMdmJjlzOM2Zzm5Qi5j3a6LSVzg",
     entries: {
-      type: null, city: null, name: null, date: null,
-      endDate: null, status: null, link: null, notes: null,
+      type: "354703213", city: "1869424472", name: "633186871", date: "969248841",
+      endDate: "29433838", status: "1329867708", link: "1822494486", notes: "82491916",
     },
   },
   sheetCsvUrl: null,
