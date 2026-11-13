@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>הטיול שלנו לתאילנד</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="sun"></div>
+    <div class="hero-content">
+      <p class="eyebrow">🇹🇭 תאילנד</p>
+      <h1 id="title"></h1>
+      <p id="subtitle" class="subtitle"></p>
+      <div id="countdown" class="countdown"></div>
+    </div>
+    <svg class="waves" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,64 C240,120 480,0 720,48 C960,96 1200,24 1440,64 L1440,120 L0,120 Z" fill="var(--sand)"/>
+    </svg>
+  </header>
+
+  <nav class="tabs">
+    <a href="#travelers">👨‍👩‍👧‍👦 מטיילים</a>
+    <a href="#flights">✈️ טיסות</a>
+    <a href="#route">🧭 מסלול</a>
+    <a href="#days">🗓️ יום-יום</a>
+    <a href="#hotels">🏨 מלונות</a>
+    <a href="#attractions">📍 אטרקציות</a>
+  </nav>
+
+  <main>
+    <section id="travelers">
+      <h2>👨‍👩‍👧‍👦 המטיילים</h2>
+      <div id="travelers-list" class="travelers"></div>
+    </section>
+
+    <section id="flights">
+      <h2>✈️ טיסות</h2>
+      <div id="flights-list" class="grid"></div>
+    </section>
+
+    <section id="route">
+      <h2>🧭 המסלול</h2>
+      <div id="route-list" class="route"></div>
+    </section>
+
+    <section id="days">
+      <h2>🗓️ יום אחרי יום</h2>
+      <div id="days-list" class="days"></div>
+    </section>
+
+    <section id="hotels">
+      <h2>🏨 מלונות</h2>
+      <div id="hotels-list" class="grid"></div>
+    </section>
+
+    <section id="attractions">
+      <h2>📍 אטרקציות ורעיונות</h2>
+      <div id="attractions-list"></div>
+    </section>
+  </main>
+
+  <footer>נבנה באהבה לקראת הטיול 🥥</footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
