@@ -8,7 +8,7 @@ const TRIP = {
   // ---- חיבור לטופס ולטבלה של Google (מה שטלאור מוסיף מהאתר) ----
   // formUrl: הקישור לטופס Google Forms (כפתור "שליחה" > קישור)
   // sheetCsvUrl: הקישור לטבלה בפורמט CSV (קובץ > שיתוף > פרסום באינטרנט > CSV)
-  formUrl: null,
+  formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeTpq5awQaN_R6cRMSktoKwMdmJjlzOM2Zzm5Qi5j3a6LSVzg/viewform",
   sheetCsvUrl: null,
 
   title: "הטיול שלנו לתאילנד",
