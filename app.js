@@ -170,18 +170,26 @@ function safeLink(s) {
 
 function sheetRowsToObjects(rows) {
   const headers = rows[0].map((h) => h.trim());
-  const find = (test) => headers.findIndex(test);
+  // With form sections, the same question can appear in several sections and so in
+  // several columns. Each field keeps every matching column and takes the first non-empty one.
+  const findAll = (test) => headers.map((h, i) => (test(h) ? i : -1)).filter((i) => i >= 0);
   const col = {
-    type: find((h) => h.includes("מה מוסיפים")),
-    city: find((h) => h.includes("עיר")),
-    name: find((h) => h.startsWith("שם")),
-    endDate: find((h) => h.includes("עד תאריך")),
-    date: find((h) => h.includes("תאריך") && !h.includes("עד תאריך") && !h.includes("חותמת")),
-    status: find((h) => h.includes("סטטוס")),
-    link: find((h) => h.includes("קישור")),
-    notes: find((h) => h.includes("פרטים") || h.includes("הערות")),
+    type: findAll((h) => h.includes("מה מוסיפים")),
+    city: findAll((h) => h.includes("עיר")),
+    name: findAll((h) => h.startsWith("שם")),
+    endDate: findAll((h) => h.includes("עד תאריך")),
+    date: findAll((h) => h.includes("תאריך") && !h.includes("עד תאריך") && !h.includes("חותמת")),
+    status: findAll((h) => h.includes("סטטוס")),
+    link: findAll((h) => h.includes("קישור")),
+    notes: findAll((h) => h.includes("פרטים") || h.includes("הערות")),
   };
-  const get = (r, k) => (col[k] >= 0 ? (r[col[k]] || "").trim() : "");
+  const get = (r, k) => {
+    for (const i of col[k]) {
+      const v = (r[i] || "").trim();
+      if (v) return v;
+    }
+    return "";
+  };
   return rows.slice(1).map((r) => ({
     type: get(r, "type"), city: get(r, "city"), name: get(r, "name"),
     date: toIsoDate(get(r, "date")), endDate: toIsoDate(get(r, "endDate")),
