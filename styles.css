@@ -227,18 +227,116 @@ footer { padding: 24px 16px 32px; text-align: center; color: var(--muted); }
   font-size: 0.92rem;
 }
 
-/* ---------- Add buttons (Google Form) ---------- */
-.tabs a.add-tab { background: var(--coral); color: #fff; }
-.add-btn {
-  display: inline-block;
-  margin-inline-start: 8px;
-  padding: 3px 12px;
+/* ---------- Add buttons ---------- */
+.tabs .add-tab {
+  flex: 0 0 auto;
+  padding: 7px 14px;
+  border: 0;
   border-radius: 999px;
   background: var(--coral);
   color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.add-btn {
+  margin-inline-start: 8px;
+  padding: 3px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--coral);
+  color: #fff;
+  font: inherit;
   font-size: 0.85rem;
   font-weight: 500;
-  text-decoration: none;
   vertical-align: middle;
+  cursor: pointer;
 }
+.add-btn:hover, .tabs .add-tab:hover { filter: brightness(0.95); }
 .card a { color: var(--sea-dark); }
+
+/* ---------- Add dialog ---------- */
+.add-dialog {
+  width: min(520px, calc(100% - 24px));
+  max-height: calc(100% - 24px);
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  background: var(--sand);
+  color: var(--ink);
+  box-shadow: 0 20px 60px rgba(31, 127, 145, 0.25);
+}
+.add-dialog::backdrop { background: rgba(35, 67, 76, 0.45); backdrop-filter: blur(2px); }
+.add-dialog form { display: grid; gap: 14px; padding: 20px; }
+.dialog-head { display: flex; align-items: center; justify-content: space-between; }
+.dialog-head h2 { margin: 0; }
+.close-btn {
+  width: 36px; height: 36px;
+  border: 0; border-radius: 50%;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.add-dialog fieldset { margin: 0; padding: 0; border: 0; }
+.add-dialog legend, .field > span { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.95rem; }
+.type-picker, .status-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+.type-picker legend, .status-picker legend { width: 100%; }
+.type-picker label, .status-picker label { cursor: pointer; }
+.type-picker input, .status-picker input { position: absolute; opacity: 0; pointer-events: none; }
+.type-picker span, .status-picker span {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 2px solid var(--sand-dark);
+  border-radius: 999px;
+  background: var(--card);
+  font-size: 0.95rem;
+}
+.type-picker input:checked + span, .status-picker input:checked + span {
+  border-color: var(--sea);
+  background: var(--sky);
+  color: var(--sea-dark);
+  font-weight: 500;
+}
+.type-picker input:focus-visible + span, .status-picker input:focus-visible + span { outline: 2px solid var(--sea-dark); }
+.field { display: block; }
+.field input, .field textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid var(--sand-dark);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+}
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--sea); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-row:not(:has(.field:not([hidden]))) { display: none; }
+[hidden] { display: none !important; }
+.form-error { margin: 0; padding: 8px 12px; border-radius: 10px; background: #ffe4de; color: #a8341c; }
+.save-btn {
+  padding: 12px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--sea-dark);
+  color: #fff;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.save-btn:disabled { opacity: 0.6; cursor: wait; }
+
+.toast {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  max-width: calc(100% - 32px);
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: var(--shadow);
+}

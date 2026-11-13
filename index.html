@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <header class="hero">
@@ -66,7 +66,60 @@
 
   <footer>נבנה באהבה לקראת הטיול 🥥</footer>
 
-  <script src="data.js?v=5"></script>
-  <script src="app.js?v=5"></script>
+  <dialog id="add-dialog" class="add-dialog">
+    <form id="add-form" method="dialog" novalidate>
+      <div class="dialog-head">
+        <h2>➕ הוספה לטיול</h2>
+        <button type="button" class="close-btn" id="add-close" aria-label="סגירה">✕</button>
+      </div>
+
+      <fieldset class="type-picker">
+        <legend>מה מוסיפים?</legend>
+        <label><input type="radio" name="type" value="אטרקציה / רעיון" checked><span>📍 אטרקציה / רעיון</span></label>
+        <label><input type="radio" name="type" value="מלון"><span>🏨 מלון</span></label>
+        <label><input type="radio" name="type" value="תוכנית ליום"><span>🗓️ תוכנית ליום</span></label>
+      </fieldset>
+
+      <label class="field"><span>עיר / מקום</span>
+        <input name="city" list="city-options" placeholder="לדוגמה: פוקט" autocomplete="off">
+        <datalist id="city-options"></datalist>
+      </label>
+
+      <label class="field"><span data-label-for="name">שם</span>
+        <input name="name" placeholder="">
+      </label>
+
+      <div class="field-row">
+        <label class="field" data-show="hotel day"><span data-label-for="date">תאריך</span>
+          <input type="date" name="date">
+        </label>
+        <label class="field" data-show="hotel"><span>עד תאריך (צ'ק-אאוט)</span>
+          <input type="date" name="endDate">
+        </label>
+      </div>
+
+      <fieldset class="field status-picker" data-show="hotel">
+        <legend>סטטוס</legend>
+        <label><input type="radio" name="status" value="בבדיקה" checked><span>🔍 בבדיקה</span></label>
+        <label><input type="radio" name="status" value="הוזמן"><span>✅ הוזמן</span></label>
+      </fieldset>
+
+      <label class="field"><span>קישור (לא חובה)</span>
+        <input type="url" name="link" placeholder="https://..." dir="ltr">
+      </label>
+
+      <label class="field"><span data-label-for="notes">פרטים / הערות</span>
+        <textarea name="notes" rows="3"></textarea>
+      </label>
+
+      <p class="form-error" id="add-error" hidden></p>
+      <button type="submit" class="save-btn" id="add-save">שמירה</button>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="data.js?v=6"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

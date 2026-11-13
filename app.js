@@ -226,16 +226,188 @@ function mergeSheetEntries(entries) {
   TRIP.days.sort((a, b) => (a.date || "").localeCompare(b.date || ""));
 }
 
+// ---------- In-site "add" form ----------
+// Entries are submitted in the background to the Google Form (which feeds the Google Sheet),
+// so viewers never leave the site. The sheet is published as CSV and read back on load.
+
+const FORM = TRIP.googleForm || {};
+const formReady = () => FORM.formId && FORM.entries && FORM.entries.type && FORM.entries.name;
+
+// Snapshot of the hand-written data, so sheet entries can be re-merged without duplicates.
+const BASE = JSON.parse(JSON.stringify({ attractions: TRIP.attractions, hotels: TRIP.hotels, days: TRIP.days }));
+let sheetEntries = [];
+
+// Entries saved from this browser that may not be in the published sheet yet
+// (Google can take a few minutes to refresh it). Kept for 30 minutes at most.
+const PENDING_KEY = "trip-pending-adds";
+const PENDING_TTL = 30 * 60 * 1000;
+const sameEntry = (a, b) => a.type === b.type && a.name === b.name && (a.date || "") === (b.date || "");
+
+function loadPending() {
+  try {
+    const list = JSON.parse(localStorage.getItem(PENDING_KEY) || "[]");
+    return list.filter((p) => Date.now() - p.savedAt < PENDING_TTL && !sheetEntries.some((e) => sameEntry(e, p.entry)));
+  } catch { return []; }
+}
+function savePending(list) {
+  try { localStorage.setItem(PENDING_KEY, JSON.stringify(list)); } catch { /* storage unavailable */ }
+}
+
+function rebuild() {
+  const base = JSON.parse(JSON.stringify(BASE));
+  TRIP.attractions = base.attractions;
+  TRIP.hotels = base.hotels;
+  TRIP.days = base.days;
+  const pending = loadPending();
+  savePending(pending);
+  mergeSheetEntries([...sheetEntries, ...pending.map((p) => p.entry)]);
+  renderAll();
+}
+
 function renderAddButtons() {
-  if (!TRIP.formUrl) return;
-  const url = safeLink(TRIP.formUrl);
-  if (!url) return;
+  if (!formReady()) return;
   document.querySelector(".tabs").insertAdjacentHTML("beforeend",
-    `<a class="add-tab" href="${escapeHtml(url)}" target="_blank" rel="noopener">➕ הוספה</a>`);
-  for (const id of ["days", "hotels", "attractions"]) {
+    `<button type="button" class="add-tab" data-add="אטרקציה / רעיון">➕ הוספה</button>`);
+  const typeFor = { days: "תוכנית ליום", hotels: "מלון", attractions: "אטרקציה / רעיון" };
+  for (const [id, type] of Object.entries(typeFor)) {
     document.querySelector(`#${id} h2`).insertAdjacentHTML("beforeend",
-      ` <a class="add-btn" href="${escapeHtml(url)}" target="_blank" rel="noopener">➕ הוספה</a>`);
+      ` <button type="button" class="add-btn" data-add="${type}">➕ הוספה</button>`);
   }
+  document.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-add]");
+    if (btn) openAddDialog(btn.dataset.add);
+  });
+}
+
+const LABELS = {
+  "אטרקציה / רעיון": { name: "שם האטרקציה", namePh: "לדוגמה: שיט לאיי פי פי", notes: "פרטים / הערות", mode: "attraction" },
+  "מלון": { name: "שם המלון", namePh: "לדוגמה: Kata Beach Resort", date: "צ'ק-אין", notes: "הערות (מחיר, ארוחת בוקר...)", mode: "hotel" },
+  "תוכנית ליום": { name: "כותרת ליום", namePh: "לדוגמה: יום בים", date: "תאריך", notes: "מה עושים? (כל דבר בשורה נפרדת)", mode: "day" },
+};
+
+function currentType() {
+  return $("add-form").querySelector('input[name="type"]:checked').value;
+}
+
+function updateDialogFields() {
+  const form = $("add-form");
+  const l = LABELS[currentType()];
+  form.querySelectorAll("[data-show]").forEach((el) => {
+    el.hidden = !el.dataset.show.split(" ").includes(l.mode);
+  });
+  form.querySelector('[data-label-for="name"]').textContent = l.name;
+  form.querySelector('[data-label-for="notes"]').textContent = l.notes;
+  if (l.date) form.querySelector('[data-label-for="date"]').textContent = l.date;
+  form.elements.name.placeholder = l.namePh;
+  $("add-error").hidden = true;
+}
+
+function openAddDialog(type) {
+  const form = $("add-form");
+  form.reset();
+  form.querySelector(`input[name="type"][value="${type}"]`).checked = true;
+  const cities = [...new Set([...TRIP.stops.filter((s) => s.confirmed).map((s) => s.name), ...TRIP.attractions.map((a) => a.city)])];
+  $("city-options").innerHTML = cities.map((c) => `<option value="${escapeHtml(c)}">`).join("");
+  form.elements.date.min = form.elements.endDate.min = TRIP.startDate || "";
+  form.elements.date.max = form.elements.endDate.max = TRIP.endDate || "";
+  updateDialogFields();
+  $("add-dialog").showModal();
+  form.elements.city.focus();
+}
+
+function showToast(msg) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.hidden = false;
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => { t.hidden = true; }, 4500);
+}
+
+function readDialog() {
+  const f = $("add-form").elements;
+  const type = currentType();
+  const mode = LABELS[type].mode;
+  return {
+    type,
+    city: f.city.value.trim(),
+    name: f.name.value.trim(),
+    date: mode === "attraction" ? null : f.date.value || null,
+    endDate: mode === "hotel" ? f.endDate.value || null : null,
+    status: mode === "hotel" ? $("add-form").querySelector('input[name="status"]:checked').value : "",
+    link: f.link.value.trim(),
+    notes: f.notes.value.trim(),
+  };
+}
+
+function validate(e) {
+  if (!e.name) return LABELS[e.type].name + " – חובה למלא";
+  if (e.type === "תוכנית ליום" && !e.date) return "צריך לבחור תאריך";
+  if (e.link && !safeLink(e.link)) return "הקישור צריך להתחיל ב-https://";
+  if (e.date && e.endDate && e.endDate < e.date) return "תאריך הצ'ק-אאוט לפני הצ'ק-אין";
+  return null;
+}
+
+async function submitToForm(e) {
+  const E = FORM.entries;
+  const body = new URLSearchParams();
+  const put = (key, value) => { if (E[key] && value) body.append(`entry.${E[key]}`, value); };
+  const putDate = (key, iso) => {
+    if (!E[key] || !iso) return;
+    const [y, m, d] = iso.split("-");
+    body.append(`entry.${E[key]}_year`, y);
+    body.append(`entry.${E[key]}_month`, String(+m));
+    body.append(`entry.${E[key]}_day`, String(+d));
+  };
+  put("type", e.type);
+  put("city", e.city);
+  put("name", e.name);
+  putDate("date", e.date);
+  putDate("endDate", e.endDate);
+  put("status", e.status);
+  put("link", e.link);
+  put("notes", e.notes);
+  // The form has 3 sections; Google needs the path taken through them.
+  body.append("pageHistory", e.type === "מלון" ? "0,1,2" : "0,2");
+  // Google Forms does not allow reading the response cross-origin; a network error still throws.
+  await fetch(`https://docs.google.com/forms/d/e/${encodeURIComponent(FORM.formId)}/formResponse`, {
+    method: "POST", mode: "no-cors", body,
+  });
+}
+
+function setupAddDialog() {
+  if (!formReady()) return;
+  const form = $("add-form");
+  form.addEventListener("change", (ev) => { if (ev.target.name === "type") updateDialogFields(); });
+  $("add-close").addEventListener("click", () => $("add-dialog").close());
+  $("add-dialog").addEventListener("click", (ev) => { if (ev.target === ev.currentTarget) ev.currentTarget.close(); });
+  form.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const entry = readDialog();
+    const err = validate(entry);
+    if (err) {
+      $("add-error").textContent = err;
+      $("add-error").hidden = false;
+      return;
+    }
+    const btn = $("add-save");
+    btn.disabled = true;
+    btn.textContent = "שומרים...";
+    try {
+      await submitToForm(entry);
+      const pending = loadPending();
+      pending.push({ entry: { ...entry, link: safeLink(entry.link) }, savedAt: Date.now() });
+      savePending(pending);
+      rebuild();
+      $("add-dialog").close();
+      showToast("✅ נשמר! יופיע לכל המשפחה תוך כמה דקות");
+    } catch {
+      $("add-error").textContent = "לא הצלחנו לשמור – בדקו את החיבור לאינטרנט ונסו שוב";
+      $("add-error").hidden = false;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "שמירה";
+    }
+  });
 }
 
 function renderAll() {
@@ -248,8 +420,9 @@ function renderAll() {
   renderAttractions();
 }
 
-renderAll();
+rebuild();
 renderAddButtons();
+setupAddDialog();
 
 if (TRIP.sheetCsvUrl) {
   fetch(TRIP.sheetCsvUrl, { cache: "no-store" })
@@ -257,8 +430,8 @@ if (TRIP.sheetCsvUrl) {
     .then((text) => {
       const rows = parseCsv(text);
       if (rows.length > 1) {
-        mergeSheetEntries(sheetRowsToObjects(rows));
-        renderAll();
+        sheetEntries = sheetRowsToObjects(rows);
+        rebuild();
       }
     })
     .catch((err) => console.warn("Could not load additions from the sheet:", err));

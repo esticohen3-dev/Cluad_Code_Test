@@ -5,10 +5,18 @@
 // ============================================================
 
 const TRIP = {
-  // ---- חיבור לטופס ולטבלה של Google (מה שטלאור מוסיף מהאתר) ----
-  // formUrl: הקישור לטופס Google Forms (כפתור "שליחה" > קישור)
+  // ---- שמירת מידע מהאתר (טופס ההוספה בתוך האתר) ----
+  // המידע נשמר ברקע ב-Google Form, ומשם לטבלת Google Sheets. המשתמש לא רואה את Google.
+  // formId: המזהה מתוך הקישור לטופס (החלק שאחרי /d/e/)
+  // entries: מספרי השדות של הטופס (entry.XXXX), מתוך "קישור למילוי מראש"
   // sheetCsvUrl: הקישור לטבלה בפורמט CSV (קובץ > שיתוף > פרסום באינטרנט > CSV)
-  formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeTpq5awQaN_R6cRMSktoKwMdmJjlzOM2Zzm5Qi5j3a6LSVzg/viewform",
+  googleForm: {
+    formId: "1FAIpQLSeTpq5awQaN_R6cRMSktoKwMdmJjlzOM2Zzm5Qi5j3a6LSVzg",
+    entries: {
+      type: null, city: null, name: null, date: null,
+      endDate: null, status: null, link: null, notes: null,
+    },
+  },
   sheetCsvUrl: null,
 
   title: "הטיול שלנו לתאילנד",
