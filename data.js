@@ -82,14 +82,6 @@ const TRIP = {
   ],
 
   // אטרקציות ורעיונות לפי עיר. planned: true = בתוכנית, false = רק רעיון
-  attractions: [
-    { city: "פוקט", name: "חוף קאטה", emoji: "🏖️", planned: false, note: "חוף רגוע ויפה, מעולה לשחייה" },
-    { city: "פוקט", name: "שיט לאיי פי פי", emoji: "🚤", planned: false, note: "טיול יום לאיים ולמפרץ מאיה" },
-    { city: "פוקט", name: "הבודהה הגדול", emoji: "🛕", planned: false, note: "תצפית מדהימה על האי" },
-    { city: "פוקט", name: "העיר העתיקה של פוקט", emoji: "🎨", planned: false, note: "בתים צבעוניים, קפה ושוק לילה ביום ראשון" },
-    { city: "בנגקוק", name: "הארמון הגדול ו-וואט פו", emoji: "👑", planned: false, note: "לבוא מוקדם, לבוש צנוע" },
-    { city: "בנגקוק", name: "שוק צ'אטוצ'אק", emoji: "🛍️", planned: false, note: "השוק הענק של סופ\"ש" },
-    { city: "בנגקוק", name: "שייט בנהר צ'או פראיה", emoji: "⛴️", planned: false, note: "דרך כיפית לראות את העיר" },
-    { city: "בנגקוק", name: "רחוב יאוורט – צ'יינה טאון", emoji: "🍜", planned: false, note: "אוכל רחוב בערב" },
-  ],
+  // דוגמה: { city: "פוקט", name: "חוף קאטה", emoji: "🏖️", planned: false, note: "חוף רגוע" }
+  attractions: [],
 };

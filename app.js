@@ -112,6 +112,10 @@ function renderHotels() {
 }
 
 function renderAttractions() {
+  if (!TRIP.attractions.length) {
+    $("attractions-list").innerHTML = `<div class="empty">📍 עוד אין אטרקציות – לחצו על "➕ הוספה" כדי להוסיף</div>`;
+    return;
+  }
   const cities = [...new Set(TRIP.attractions.map((a) => a.city))];
   $("attractions-list").innerHTML = cities.map((city) => `
     <div class="city-group">
@@ -239,7 +243,7 @@ let sheetEntries = [];
 
 // Entries saved from this browser that may not be in the published sheet yet
 // (Google can take a few minutes to refresh it). Kept for 30 minutes at most.
-const PENDING_KEY = "trip-pending-adds";
+const PENDING_KEY = "trip-pending-adds-v2";
 const PENDING_TTL = 30 * 60 * 1000;
 const sameEntry = (a, b) => a.type === b.type && a.name === b.name && (a.date || "") === (b.date || "");
 
