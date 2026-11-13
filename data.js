@@ -9,8 +9,8 @@ const TRIP = {
   subtitle: "ים, חול, פאד תאי וזיכרונות 🌴",
 
   // תאריכים בפורמט "YYYY-MM-DD", לדוגמה "2027-02-10"
-  startDate: null,
-  endDate: null,
+  startDate: "2027-08-07",
+  endDate: "2027-08-26",
 
   travelers: [
     { name: "אסתי", emoji: "🌺" },
@@ -19,28 +19,37 @@ const TRIP = {
     { name: "ניב", emoji: "🏄" },
   ],
 
+  // טיסות – כל כיוון מורכב מכמה קטעים (legs). זמנים מקומיים.
   flights: [
     {
       label: "טיסת הלוך",
-      from: "ישראל", fromCode: "TLV",
-      to: "פוקט", toCode: "HKT",
-      date: null, departTime: null, arriveTime: null,
-      airline: null, flightNumber: null, stops: null,
+      summary: "תל אביב → דובאי → פוקט",
+      note: "עצירה בדובאי של 2:35 שעות",
+      legs: [
+        { date: "2027-08-07", from: "תל אביב", fromCode: "TLV", to: "דובאי", toCode: "DXB",
+          departTime: "15:50", arriveTime: "20:05", airline: "flydubai", flightNumber: "FZ 1082", duration: "3:15" },
+        { date: "2027-08-07", from: "דובאי", fromCode: "DXB", to: "פוקט", toCode: "HKT",
+          departTime: "22:40", arriveTime: "08:10 (+1)", airline: "Emirates", flightNumber: "EK 390", duration: "6:30" },
+      ],
     },
     {
       label: "טיסת חזור",
-      from: "בנגקוק", fromCode: "BKK",
-      to: "ישראל", toCode: "TLV",
-      date: null, departTime: null, arriveTime: null,
-      airline: null, flightNumber: null, stops: null,
+      summary: "בנגקוק → דובאי → תל אביב",
+      note: "⚠️ ההמראה מבנגקוק ב-03:40 לפנות בוקר – יוצאים לשדה בערב של 25.8. עצירה בדובאי של 5:15 שעות",
+      legs: [
+        { date: "2027-08-26", from: "בנגקוק", fromCode: "BKK", to: "דובאי", toCode: "DXB",
+          departTime: "03:40", arriveTime: "06:50", airline: "Emirates", flightNumber: "EK 371", duration: "6:10" },
+        { date: "2027-08-26", from: "דובאי", fromCode: "DXB", to: "תל אביב", toCode: "TLV",
+          departTime: "12:05", arriveTime: "14:35", airline: "flydubai", flightNumber: "FZ 1081", duration: "3:30" },
+      ],
     },
   ],
 
   // התחנות לפי הסדר. confirmed: true = סגור, false = עוד לא סגור
   stops: [
-    { name: "פוקט", emoji: "🏝️", nights: null, confirmed: true, note: "נוחתים כאן" },
+    { name: "פוקט", emoji: "🏝️", nights: null, confirmed: true, note: "נוחתים כאן ב-8.8" },
     { name: "עוד לא נקבע", emoji: "❓", nights: null, confirmed: false, note: "האמצע של הטיול – עוד פתוח" },
-    { name: "בנגקוק", emoji: "🏙️", nights: null, confirmed: true, note: "טסים הביתה מכאן" },
+    { name: "בנגקוק", emoji: "🏙️", nights: null, confirmed: true, note: "טסים הביתה בלילה של 25.8" },
   ],
 
   // מלונות – לכל תחנה. status: "not-booked" | "considering" | "booked"
@@ -51,7 +60,12 @@ const TRIP = {
 
   // מסלול יומי. type: "stay" (יום רגיל) | "move" (יום מעבר) | "flight"
   // דוגמה: { date: "2027-02-10", place: "פוקט", type: "flight", title: "נחיתה בפוקט", items: ["צ'ק-אין במלון", "שקיעה בחוף"] }
-  days: [],
+  days: [
+    { date: "2027-08-07", place: "בדרך", type: "flight", title: "יוצאים לדרך!", items: ["15:50 המראה מתל אביב לדובאי", "22:40 טיסה מדובאי לפוקט"] },
+    { date: "2027-08-08", place: "פוקט", type: "flight", title: "נחיתה בפוקט 🏝️", items: ["08:10 נחיתה בפוקט", "צ'ק-אין במלון ומנוחה"] },
+    { date: "2027-08-25", place: "בנגקוק", type: "move", title: "יום אחרון בבנגקוק", items: ["יוצאים לשדה התעופה בערב / בלילה"] },
+    { date: "2027-08-26", place: "בדרך הביתה", type: "flight", title: "טסים הביתה", items: ["03:40 המראה מבנגקוק לדובאי", "12:05 טיסה מדובאי לתל אביב", "14:35 נחיתה בתל אביב 🏠"] },
+  ],
 
   // אטרקציות ורעיונות לפי עיר. planned: true = בתוכנית, false = רק רעיון
   attractions: [

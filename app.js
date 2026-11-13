@@ -39,21 +39,26 @@ function renderTravelers() {
     </div>`).join("");
 }
 
+function renderLeg(l) {
+  return `
+    <div class="leg">
+      <div class="leg-date muted">${l.date ? escapeHtml(formatDate(l.date)) : TBD}</div>
+      <div class="flight-route">
+        <div class="airport"><div class="code">${escapeHtml(l.fromCode)}</div><div class="muted">${escapeHtml(l.from)}</div><div class="time" dir="ltr">${val(l.departTime)}</div></div>
+        <div class="plane-line"><span>✈️</span>${l.duration ? `<small>${escapeHtml(l.duration)} שע׳</small>` : ""}</div>
+        <div class="airport"><div class="code">${escapeHtml(l.toCode)}</div><div class="muted">${escapeHtml(l.to)}</div><div class="time" dir="ltr">${val(l.arriveTime)}</div></div>
+      </div>
+      <div class="leg-meta muted">${val(l.airline)} · <span dir="ltr">${val(l.flightNumber)}</span></div>
+    </div>`;
+}
+
 function renderFlights() {
   $("flights-list").innerHTML = TRIP.flights.map((f) => `
     <div class="card">
-      <h3>${escapeHtml(f.label)}</h3>
-      <div class="flight-route">
-        <div class="airport"><div class="code">${escapeHtml(f.fromCode)}</div><div class="muted">${escapeHtml(f.from)}</div></div>
-        <div class="plane-line"><span>✈️</span></div>
-        <div class="airport"><div class="code">${escapeHtml(f.toCode)}</div><div class="muted">${escapeHtml(f.to)}</div></div>
-      </div>
-      <dl class="details">
-        <dt>תאריך</dt><dd>${f.date ? escapeHtml(formatDate(f.date)) : TBD}</dd>
-        <dt>המראה / נחיתה</dt><dd>${f.departTime ? escapeHtml(`${f.departTime} → ${f.arriveTime || "?"}`) : TBD}</dd>
-        <dt>חברת תעופה</dt><dd>${val(f.airline)}</dd>
-        <dt>מספר טיסה</dt><dd>${val(f.flightNumber)}</dd>
-      </dl>
+      <h3>${escapeHtml(f.label)} <span class="badge ok">הוזמן ✓</span></h3>
+      <div class="muted">${escapeHtml(f.summary || "")}</div>
+      ${f.legs.map(renderLeg).join('<div class="layover">🕐 עצירה בדובאי</div>')}
+      ${f.note ? `<p class="flight-note">${escapeHtml(f.note)}</p>` : ""}
     </div>`).join("");
 }
 

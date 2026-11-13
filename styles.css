@@ -199,3 +199,30 @@ footer { padding: 24px 16px 32px; text-align: center; color: var(--muted); }
 @media (min-width: 900px) {
   .tabs { justify-content: center; }
 }
+
+/* ---------- Flight legs ---------- */
+.leg { padding: 12px 0 4px; }
+.leg-date { font-size: 0.9rem; }
+.leg-meta { text-align: center; font-size: 0.9rem; }
+.airport .time { font-weight: 700; margin-top: 2px; }
+.plane-line small {
+  position: absolute; top: 10px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem; color: var(--muted); white-space: nowrap;
+}
+.layover {
+  margin: 6px 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--sky);
+  color: var(--sea-dark);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.flight-note {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fff4e0;
+  font-size: 0.92rem;
+}
