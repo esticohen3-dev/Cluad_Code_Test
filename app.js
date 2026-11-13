@@ -350,8 +350,14 @@ function openAddDialog(type) {
   form.querySelector(`input[name="type"][value="${type}"]`).checked = true;
   const cities = [...new Set([...TRIP.stops.filter((s) => s.confirmed).map((s) => s.name), ...TRIP.attractions.map((a) => a.city)])];
   $("city-options").innerHTML = cities.map((c) => `<option value="${escapeHtml(c)}">`).join("");
+  // Limit dates to the trip and pre-fill them, so the phone's date picker opens on the
+  // trip month instead of today. Check-out starts one day after check-in.
   form.elements.date.min = form.elements.endDate.min = TRIP.startDate || "";
   form.elements.date.max = form.elements.endDate.max = TRIP.endDate || "";
+  if (TRIP.startDate) {
+    form.elements.date.value = TRIP.startDate;
+    form.elements.endDate.value = addDays(TRIP.startDate, 1);
+  }
   updateDialogFields();
   $("add-dialog").showModal();
   form.elements.city.focus();
@@ -381,8 +387,18 @@ function readDialog() {
   };
 }
 
+function addDays(iso, n) {
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + n);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+const inTrip = (iso) => !iso || ((!TRIP.startDate || iso >= TRIP.startDate) && (!TRIP.endDate || iso <= TRIP.endDate));
+
 function validate(e) {
   if (!e.name) return LABELS[e.type].name + " – חובה למלא";
+  // iPhones do not always enforce min/max in the picker, so check here too.
+  if (!inTrip(e.date) || !inTrip(e.endDate)) return `התאריך צריך להיות בזמן הטיול (${formatDate(TRIP.startDate)} – ${formatDate(TRIP.endDate)})`;
   if (e.type === "תוכנית ליום" && !e.date) return "צריך לבחור תאריך";
   if (e.link && !safeLink(e.link)) return "הקישור צריך להתחיל ב-https://";
   if (e.date && e.endDate && e.endDate < e.date) return "תאריך הצ'ק-אאוט לפני הצ'ק-אין";
@@ -419,7 +435,16 @@ async function submitToForm(e) {
 function setupAddDialog() {
   if (!formReady()) return;
   const form = $("add-form");
-  form.addEventListener("change", (ev) => { if (ev.target.name === "type") updateDialogFields(); });
+  form.addEventListener("change", (ev) => {
+    if (ev.target.name === "type") updateDialogFields();
+    // Keep check-out after check-in: move it to the next day when it would come before.
+    if (ev.target.name === "date" && ev.target.value) {
+      form.elements.endDate.min = ev.target.value;
+      if (!form.elements.endDate.value || form.elements.endDate.value <= ev.target.value) {
+        form.elements.endDate.value = addDays(ev.target.value, 1) <= TRIP.endDate ? addDays(ev.target.value, 1) : ev.target.value;
+      }
+    }
+  });
   $("add-close").addEventListener("click", () => $("add-dialog").close());
   $("add-dialog").addEventListener("click", (ev) => { if (ev.target === ev.currentTarget) ev.currentTarget.close(); });
   form.addEventListener("submit", async (ev) => {
